@@ -13,7 +13,7 @@
 
 #include <iostream>
 #include <string>
-
+#include <fstream>
 
 using namespace std;
 using namespace eudaq;
@@ -50,6 +50,11 @@ int main( int argc, char* argv[] ){
   FileReader * reader;
   reader = new FileReader(origRunnr, filename);
   
+
+  // Opening logfile - always append logs
+  ofstream log;
+  log.open("split.log", std::ofstream::out | std::ofstream::app);
+  
   
   // Init writer
   
@@ -81,6 +86,8 @@ int main( int argc, char* argv[] ){
     exit(1);
   }
 
+  log << origRunnr << "\t" << firstNewRunnr;
+
   writer->WriteEvent(boreevent);
   
   DetectorEvent tempevent = boreevent;
@@ -97,9 +104,11 @@ int main( int argc, char* argv[] ){
       // Start new file
       currentRunnr++;
       
-      cout << "\nStarting new file: Run Nr.: " << currentRunnr << endl << endl;
+      cout << "\nStarting new file with Run Nr.: " << currentRunnr << endl << endl;
       
       writer->StartRun(currentRunnr);
+      
+      log << "\t" << currentRunnr;
       
       // Write old BOREevent first
       writer->WriteEvent(boreevent);
@@ -114,9 +123,8 @@ int main( int argc, char* argv[] ){
 
   }while(reader->NextEvent());
 
-  //delete reader;
-  //delete writer;
-  
+  log << endl;
+  log.close();
 
   return 0;
 
