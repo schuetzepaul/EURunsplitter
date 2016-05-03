@@ -96,6 +96,9 @@ int main( int argc, char* argv[] ){
     if(!(evtnr%evtsPerFile)){
       // Start new file
       currentRunnr++;
+      
+      cout << "\nStarting new file: Run Nr.: " << currentRunnr << endl << endl;
+      
       writer->StartRun(currentRunnr);
       
       // Write old BOREevent first
@@ -105,7 +108,7 @@ int main( int argc, char* argv[] ){
     tempevent = reader->GetDetectorEvent();
     writer->WriteEvent(tempevent);
     
-    cout << "Writing out event " << evtnr << endl;
+    if(!(evtnr%5000))cout << "Writing out event Nr. " << evtnr << " to Runnr. " << currentRunnr << endl;
 
     evtnr++;
 
